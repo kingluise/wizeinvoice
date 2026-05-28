@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Settings - Wize Invoice</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/dashboard.html" class="navbar-brand">
+                <span>📄 Wize Invoice</span>
+            </a>
+            <div class="navbar-menu">
+                <a href="/dashboard.html" class="navbar-link">Dashboard</a>
+                <a href="/invoice-create.html" class="navbar-link">Create Invoice</a>
+                <a href="/settings.html" class="navbar-link active">Settings</a>
+                <a href="/subscribe.html" class="navbar-link hidden" id="subscribe-link">Subscribe</a>
+                <a href="/admin.html" class="navbar-link hidden" id="admin-link">Admin Panel</a>
+            </div>
+            <div id="auth-buttons" class="navbar-user">
+                <a href="/login.html" class="btn btn-outline">Login</a>
+                <a href="/register.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            <div id="user-menu" class="navbar-user hidden">
+                <span id="user-name" class="user-name"></span>
+                <button id="logout-btn" class="btn btn-outline btn-sm">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Alert Container -->
+    <div id="alert-container" class="alert-container"></div>
+
+    <!-- Main Content -->
+    <main class="settings-container">
+        <div class="container">
+            <div class="page-header">
+                <h1>Settings</h1>
+                <p>Manage your account and customize your invoice branding</p>
+            </div>
+
+            <div class="settings-grid">
+                <!-- Profile Settings -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <h3>Profile Information</h3>
+                        <p>Update your personal information</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="profile-form">
+                            <div class="form-group">
+                                <label for="fullname" class="form-label">Full Name</label>
+                                <input type="text" id="fullname" class="form-input" placeholder="Your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-email" class="form-label">Email Address</label>
+                                <input type="email" id="profile-email" class="form-input" disabled>
+                                <small class="form-hint">Email cannot be changed</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" id="phone" class="form-input" placeholder="08012345678">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Profile</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Business Settings -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <h3>Business Information</h3>
+                        <p>This will appear on your invoices</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="business-form">
+                            <div class="form-group">
+                                <label for="business-name" class="form-label">Business Name</label>
+                                <input type="text" id="business-name" class="form-input" placeholder="Your business name">
+                            </div>
+                            <div class="form-group">
+                                <label for="business-address" class="form-label">Business Address</label>
+                                <textarea id="business-address" class="form-textarea" rows="3" placeholder="Your business address"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Business Info</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Logo Upload -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <h3>Company Logo</h3>
+                        <p>Upload your logo (appears on invoices)</p>
+                    </div>
+                    <div class="card-body">
+                        <div id="logo-preview" class="logo-preview">
+                            <div class="preview-placeholder">
+                                <span>📄</span>
+                                <p>No logo uploaded</p>
+                            </div>
+                        </div>
+                        <div class="upload-area" id="logo-upload-area">
+                            <p>Drag & drop or click to upload</p>
+                            <p class="upload-hint">JPG, PNG, SVG (max 2MB)</p>
+                            <input type="file" id="logo-file" accept="image/jpeg,image/png,image/svg+xml" hidden>
+                            <button type="button" id="upload-logo-btn" class="btn btn-outline">Choose File</button>
+                        </div>
+                        <button type="button" id="remove-logo-btn" class="btn btn-danger btn-sm hidden">Remove Logo</button>
+                    </div>
+                </div>
+
+                <!-- Signature Upload -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <h3>Signature</h3>
+                        <p>Upload your signature (appears at bottom of invoices)</p>
+                    </div>
+                    <div class="card-body">
+                        <div id="signature-preview" class="signature-preview">
+                            <div class="preview-placeholder">
+                                <span>✍️</span>
+                                <p>No signature uploaded</p>
+                            </div>
+                        </div>
+                        <div class="upload-area" id="signature-upload-area">
+                            <p>Drag & drop or click to upload</p>
+                            <p class="upload-hint">JPG or PNG (max 1MB)</p>
+                            <input type="file" id="signature-file" accept="image/jpeg,image/png" hidden>
+                            <button type="button" id="upload-signature-btn" class="btn btn-outline">Choose File</button>
+                        </div>
+                        <button type="button" id="remove-signature-btn" class="btn btn-danger btn-sm hidden">Remove Signature</button>
+                    </div>
+                </div>
+
+                <!-- Change Password -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <h3>Change Password</h3>
+                        <p>Update your account password</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="password-form">
+                            <div class="form-group">
+                                <label for="current-password" class="form-label">Current Password</label>
+                                <input type="password" id="current-password" class="form-input" placeholder="Enter current password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password" class="form-label">New Password</label>
+                                <input type="password" id="new-password" class="form-input" placeholder="Enter new password" required>
+                                <small class="form-hint">Must be at least 6 characters</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password" class="form-label">Confirm New Password</label>
+                                <input type="password" id="confirm-password" class="form-input" placeholder="Confirm new password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Account Information -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <h3>Account Information</h3>
+                        <p>Your subscription and trial details</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-row">
+                            <span class="info-label">Account Status:</span>
+                            <span id="account-status" class="info-value">Loading...</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Trial End Date:</span>
+                            <span id="trial-end-date" class="info-value">Loading...</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Days Remaining:</span>
+                            <span id="days-remaining" class="info-value">Loading...</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Total Invoices:</span>
+                            <span id="total-invoices" class="info-value">Loading...</span>
+                        </div>
+                        <hr class="info-divider">
+                        <div class="subscription-actions">
+                            <a href="/subscribe.html" id="upgrade-btn" class="btn btn-primary btn-block">Upgrade to Premium</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <div class="bottom-nav">
+        <button class="bottom-nav-item" onclick="window.location.href='/dashboard.html'">
+            <span class="bottom-nav-icon">📊</span>
+            <span>Dashboard</span>
+        </button>
+        <button class="bottom-nav-item" onclick="window.location.href='/invoice-create.html'">
+            <span class="bottom-nav-icon">➕</span>
+            <span>Create</span>
+        </button>
+        <button class="bottom-nav-item active" onclick="window.location.href='/settings.html'">
+            <span class="bottom-nav-icon">⚙️</span>
+            <span>Settings</span>
+        </button>
+        <button class="bottom-nav-item" id="mobile-subscribe" onclick="window.location.href='/subscribe.html'">
+            <span class="bottom-nav-icon">💎</span>
+            <span>Upgrade</span>
+        </button>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>

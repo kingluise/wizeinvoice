@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Create Invoice - Wize Invoice</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/invoice-create.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/dashboard.html" class="navbar-brand">
+                <span>📄 Wize Invoice</span>
+            </a>
+            <div class="navbar-menu">
+                <a href="/dashboard.html" class="navbar-link">Dashboard</a>
+                <a href="/invoice-create.html" class="navbar-link active">Create Invoice</a>
+                <a href="/settings.html" class="navbar-link">Settings</a>
+                <a href="/subscribe.html" class="navbar-link hidden" id="subscribe-link">Subscribe</a>
+                <a href="/admin.html" class="navbar-link hidden" id="admin-link">Admin Panel</a>
+            </div>
+            <div id="auth-buttons" class="navbar-user">
+                <a href="/login.html" class="btn btn-outline">Login</a>
+                <a href="/register.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            <div id="user-menu" class="navbar-user hidden">
+                <span id="user-name" class="user-name"></span>
+                <button id="logout-btn" class="btn btn-outline btn-sm">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Trial Banner -->
+    <div id="trial-banner" class="trial-banner hidden"></div>
+
+    <!-- Alert Container -->
+    <div id="alert-container" class="alert-container"></div>
+
+    <!-- Main Content - Split Layout -->
+    <main class="create-invoice-modern">
+        <div class="split-container">
+            <!-- LEFT COLUMN: Form -->
+            <div class="form-panel">
+                <div class="form-header">
+                    <h2>Invoice Details</h2>
+                    <p>Fill in the information below</p>
+                </div>
+
+                <form id="invoice-form" class="modern-form">
+
+                    <!-- Client Information -->
+                    <div class="form-section">
+                        <h3 class="section-title">Client Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="client-name" class="form-label">Client Name <span class="required">*</span></label>
+                            <input type="text" id="client-name" class="form-input" placeholder="Enter client name" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="client-email" class="form-label">Email Address</label>
+                                <input type="email" id="client-email" class="form-input" placeholder="client@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="client-phone" class="form-label">Phone Number</label>
+                                <input type="tel" id="client-phone" class="form-input" placeholder="08012345678">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="invoice-date" class="form-label">Invoice Date</label>
+                                <input type="date" id="invoice-date" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="due-date" class="form-label">Due Date</label>
+                                <input type="date" id="due-date" class="form-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ✅ NEW: Company Details -->
+                    <div class="form-section">
+                        <h3 class="section-title">Your Company Details</h3>
+                        <p class="theme-hint">Pre-filled from your profile. Edit here for this invoice only.</p>
+
+                        <div class="form-group">
+                            <label for="company-name" class="form-label">Company Name</label>
+                            <input type="text" id="company-name" class="form-input" placeholder="Your Company Name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="company-address" class="form-label">Business Address</label>
+                            <input type="text" id="company-address" class="form-input" placeholder="Your Business Address">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="company-email" class="form-label">Business Email</label>
+                                <input type="email" id="company-email" class="form-input" placeholder="you@company.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="company-phone" class="form-label">Business Phone</label>
+                                <input type="tel" id="company-phone" class="form-input" placeholder="08012345678">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Branding Section - Logo & Signature -->
+                    <div class="form-section">
+                        <h3 class="section-title">Branding</h3>
+                        <div class="branding-row">
+                            <!-- Logo Upload -->
+                            <div class="branding-item">
+                                <label class="form-label">Company Logo</label>
+                                <div id="logo-preview-invoice" class="branding-preview">
+                                    <div class="preview-placeholder-small">
+                                        <span>📄</span>
+                                        <p>No logo</p>
+                                    </div>
+                                </div>
+                                <div class="branding-upload">
+                                    <input type="file" id="logo-file-invoice" accept="image/jpeg,image/png,image/svg+xml" hidden>
+                                    <button type="button" id="upload-logo-invoice-btn" class="btn btn-outline btn-sm">Upload Logo</button>
+                                    <button type="button" id="remove-logo-invoice-btn" class="btn btn-danger btn-sm hidden">Remove</button>
+                                </div>
+                                <small class="form-hint">JPG, PNG, SVG (max 2MB)</small>
+                            </div>
+                            
+                            <!-- Signature Upload -->
+                            <div class="branding-item">
+                                <label class="form-label">Signature</label>
+                                <div id="signature-preview-invoice" class="branding-preview">
+                                    <div class="preview-placeholder-small">
+                                        <span>✍️</span>
+                                        <p>No signature</p>
+                                    </div>
+                                </div>
+                                <div class="branding-upload">
+                                    <input type="file" id="signature-file-invoice" accept="image/jpeg,image/png" hidden>
+                                    <button type="button" id="upload-signature-invoice-btn" class="btn btn-outline btn-sm">Upload Signature</button>
+                                    <button type="button" id="remove-signature-invoice-btn" class="btn btn-danger btn-sm hidden">Remove</button>
+                                </div>
+                                <small class="form-hint">JPG, PNG (max 1MB)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Items -->
+                    <div class="form-section">
+                        <h3 class="section-title">Invoice Items</h3>
+                        
+                        <div id="items-container" class="items-container-modern">
+                            <!-- Dynamic item rows will be added here -->
+                        </div>
+
+                        <button type="button" id="add-item-btn" class="btn-add-item">
+                            + Add Item
+                        </button>
+
+                        <!-- Totals -->
+                        <div class="totals-modern">
+                            <div class="total-row">
+                                <span>Subtotal</span>
+                                <span id="subtotal">₦0.00</span>
+                            </div>
+                            <div class="total-row">
+                                <span>Tax</span>
+                                <div class="tax-control">
+                                    <span id="tax-amount">₦0.00</span>
+                                    <select id="tax-rate" class="tax-select">
+                                        <option value="0">0%</option>
+                                        <option value="5">5%</option>
+                                        <option value="7.5">7.5% (VAT)</option>
+                                        <option value="10">10%</option>
+                                        <option value="15">15%</option>
+                                        <option value="20">20%</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="total-row grand">
+                                <span>Total</span>
+                                <span id="total-amount">₦0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Currency Selection -->
+                    <div class="form-section">
+                        <h3 class="section-title">Currency</h3>
+                        <div class="form-group">
+                            <select id="currency" class="form-select">
+                                <option value="NGN">₦ Nigerian Naira (NGN)</option>
+                                <option value="USD">$ US Dollar (USD)</option>
+                                <option value="EUR">€ Euro (EUR)</option>
+                                <option value="GBP">£ British Pound (GBP)</option>
+                                <option value="GHS">₵ Ghanaian Cedi (GHS)</option>
+                                <option value="KES">KSh Kenyan Shilling (KES)</option>
+                                <option value="ZAR">R South African Rand (ZAR)</option>
+                            </select>
+                            <small class="form-hint">Select the currency for this invoice</small>
+                        </div>
+                    </div>
+
+                    <!-- Theme Selection -->
+                    <div class="form-section">
+                        <h3 class="section-title">Invoice Theme</h3>
+                        <p class="theme-hint">Choose a color theme for your invoice</p>
+                        <div class="theme-color-grid" id="theme-color-grid-form">
+                            <!-- 8 color options will be inserted here by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-section">
+                        <h3 class="section-title">Notes</h3>
+                        <textarea id="notes" class="form-textarea" rows="3" placeholder="Thank you for your business..."></textarea>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="form-actions">
+                        <button type="button" id="clear-form" class="btn btn-outline">Clear All</button>
+                        <button type="submit" id="generate-btn" class="btn btn-primary">Generate Invoice</button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- RIGHT COLUMN: Live Invoice Preview -->
+            <div class="preview-panel">
+                <div class="preview-header">
+                    <h2>Live Preview</h2>
+                    <p>Your invoice will look like this</p>
+                </div>
+
+                <!-- Live Invoice Preview Area -->
+                <div id="live-preview" class="live-preview">
+                    <div class="preview-loading">
+                        <div class="spinner"></div>
+                        <p>Fill in the form to see preview</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <div class="bottom-nav">
+        <button class="bottom-nav-item" onclick="window.location.href='/dashboard.html'">
+            <span class="bottom-nav-icon">📊</span>
+            <span>Dashboard</span>
+        </button>
+        <button class="bottom-nav-item active" onclick="window.location.href='/invoice-create.html'">
+            <span class="bottom-nav-icon">➕</span>
+            <span>Create</span>
+        </button>
+        <button class="bottom-nav-item" onclick="window.location.href='/settings.html'">
+            <span class="bottom-nav-icon">⚙️</span>
+            <span>Settings</span>
+        </button>
+        <button class="bottom-nav-item" onclick="window.location.href='/subscribe.html'">
+            <span class="bottom-nav-icon">💎</span>
+            <span>Upgrade</span>
+        </button>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">✅</div>
+            <h3>Invoice Generated!</h3>
+            <p>Your invoice has been created successfully.</p>
+            <div class="modal-buttons">
+                <button id="modal-download" class="btn btn-outline">Download PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/invoice-create.js"></script>
+</body>
+</html>

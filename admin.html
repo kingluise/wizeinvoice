@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Admin Panel - Wize Invoice</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/dashboard.html" class="navbar-brand">
+                <span>📄 Wize Invoice</span>
+            </a>
+            <div class="navbar-menu">
+                <a href="/dashboard.html" class="navbar-link">Dashboard</a>
+                <a href="/invoice-create.html" class="navbar-link">Create Invoice</a>
+                <a href="/settings.html" class="navbar-link">Settings</a>
+                <a href="/subscribe.html" class="navbar-link hidden" id="subscribe-link">Subscribe</a>
+                <a href="/admin.html" class="navbar-link active" id="admin-link">Admin Panel</a>
+            </div>
+            <div id="auth-buttons" class="navbar-user">
+                <a href="/login.html" class="btn btn-outline">Login</a>
+                <a href="/register.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            <div id="user-menu" class="navbar-user hidden">
+                <span id="user-name" class="user-name"></span>
+                <button id="logout-btn" class="btn btn-outline btn-sm">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Alert Container -->
+    <div id="alert-container" class="alert-container"></div>
+
+    <!-- Main Content -->
+    <main class="admin-container">
+        <div class="container">
+            <div class="page-header">
+                <h1>Admin Panel</h1>
+                <p>Manage users, invoices, and monitor system activity</p>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+                <button class="tab-btn" data-tab="users">Users</button>
+                <button class="tab-btn" data-tab="invoices">Invoices</button>
+                <button class="tab-btn" data-tab="activity">Activity Logs</button>
+            </div>
+
+            <!-- Tab: Dashboard -->
+            <div id="tab-dashboard" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-total-users">-</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📄</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-total-invoices">-</div>
+                            <div class="stat-label">Total Invoices</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-trial-users">-</div>
+                            <div class="stat-label">Trial Users</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💎</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-paid-users">-</div>
+                            <div class="stat-label">Premium Users</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-revenue">-</div>
+                            <div class="stat-label">Monthly Revenue</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-invoices-month">-</div>
+                            <div class="stat-label">Invoices This Month</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Summary -->
+                <div class="activity-summary">
+                    <h3>Recent Activity Summary</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">Last 24 Hours</span>
+                            <span class="summary-value" id="activity-24h">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Last 7 Days</span>
+                            <span class="summary-value" id="activity-7d">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Last 30 Days</span>
+                            <span class="summary-value" id="activity-30d">-</span>
+                        </div>
+                    </div>
+                    <div id="top-actions" class="top-actions">
+                        <h4>Top Actions</h4>
+                        <ul id="top-actions-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Users -->
+            <div id="tab-users" class="tab-content">
+                <div class="admin-controls">
+                    <input type="text" id="user-search" class="form-input" placeholder="Search by name or email..." style="max-width: 300px;">
+                    <button id="refresh-users" class="btn btn-outline btn-sm">🔄 Refresh</button>
+                </div>
+                <div class="users-table-container">
+                    <div id="users-loading" class="loading-container">
+                        <div class="spinner-large"></div>
+                        <p>Loading users...</p>
+                    </div>
+                    <div id="users-empty" class="empty-state hidden">
+                        <p>No users found</p>
+                    </div>
+                    <div id="users-table" class="table-container hidden">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Trial End</th>
+                                    <th>Paid</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-list"></tbody>
+                        </table>
+                    </div>
+                    <div id="users-pagination" class="pagination"></div>
+                </div>
+            </div>
+
+            <!-- Tab: Invoices -->
+            <div id="tab-invoices" class="tab-content">
+                <div class="admin-controls">
+                    <input type="text" id="invoice-search" class="form-input" placeholder="Search by invoice # or client..." style="max-width: 300px;">
+                    <button id="refresh-invoices" class="btn btn-outline btn-sm">🔄 Refresh</button>
+                </div>
+                <div class="invoices-table-container">
+                    <div id="invoices-loading" class="loading-container">
+                        <div class="spinner-large"></div>
+                        <p>Loading invoices...</p>
+                    </div>
+                    <div id="invoices-empty" class="empty-state hidden">
+                        <p>No invoices found</p>
+                    </div>
+                    <div id="invoices-table" class="table-container hidden">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Invoice #</th>
+                                    <th>Client</th>
+                                    <th>Amount</th>
+                                    <th>User</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoices-list"></tbody>
+                        </table>
+                    </div>
+                    <div id="invoices-pagination" class="pagination"></div>
+                </div>
+            </div>
+
+            <!-- Tab: Activity Logs -->
+            <div id="tab-activity" class="tab-content">
+                <div class="admin-controls">
+                    <input type="text" id="activity-search" class="form-input" placeholder="Filter by action..." style="max-width: 300px;">
+                    <label class="filter-label">
+                        User ID:
+                        <input type="number" id="activity-user-id" class="form-input" placeholder="User ID" style="width: 100px;">
+                    </label>
+                    <button id="refresh-activity" class="btn btn-outline btn-sm">🔄 Refresh</button>
+                </div>
+                <div class="activity-table-container">
+                    <div id="activity-loading" class="loading-container">
+                        <div class="spinner-large"></div>
+                        <p>Loading activity logs...</p>
+                    </div>
+                    <div id="activity-empty" class="empty-state hidden">
+                        <p>No activity logs found</p>
+                    </div>
+                    <div id="activity-table" class="table-container hidden">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                    <th>IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-list"></tbody>
+                        </table>
+                    </div>
+                    <div id="activity-pagination" class="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <div class="bottom-nav">
+        <button class="bottom-nav-item" onclick="window.location.href='/dashboard.html'">
+            <span class="bottom-nav-icon">📊</span>
+            <span>Dashboard</span>
+        </button>
+        <button class="bottom-nav-item" onclick="window.location.href='/invoice-create.html'">
+            <span class="bottom-nav-icon">➕</span>
+            <span>Create</span>
+        </button>
+        <button class="bottom-nav-item" onclick="window.location.href='/settings.html'">
+            <span class="bottom-nav-icon">⚙️</span>
+            <span>Settings</span>
+        </button>
+        <button class="bottom-nav-item" onclick="window.location.href='/subscribe.html'">
+            <span class="bottom-nav-icon">💎</span>
+            <span>Upgrade</span>
+        </button>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

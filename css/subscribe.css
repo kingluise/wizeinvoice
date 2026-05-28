@@ -1,0 +1,306 @@
+/* ========================================
+   WIZE INVOICE - SUBSCRIBE STYLES
+   ======================================== */
+
+.subscribe-container {
+    padding: var(--spacing-xl) 0;
+    min-height: calc(100vh - 64px);
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.page-header p {
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+/* Trial Status Card */
+.trial-status-card {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    color: white;
+    text-align: center;
+}
+
+.trial-status-card .status-title {
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.trial-status-card .status-days {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+}
+
+.trial-status-card .status-message {
+    opacity: 0.9;
+    font-size: 0.875rem;
+}
+
+/* Pricing Grid */
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+    max-width: 1000px;
+    margin: 0 auto var(--spacing-xl);
+}
+
+.pricing-card {
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    position: relative;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.pricing-card.featured {
+    border: 2px solid var(--primary);
+    transform: scale(1.02);
+}
+
+.pricing-card.featured:hover {
+    transform: scale(1.03) translateY(-5px);
+}
+
+.pricing-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-light);
+    color: white;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.pricing-card.featured .pricing-badge {
+    background: var(--primary);
+}
+
+.pricing-card h2 {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+    font-size: 1.5rem;
+}
+
+.pricing-price {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.pricing-period {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.75rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+.pricing-features {
+    list-style: none;
+    margin: var(--spacing-lg) 0;
+}
+
+.pricing-features li {
+    padding: var(--spacing-sm) 0;
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+.feature-muted {
+    opacity: 0.5;
+}
+
+.payment-note {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-light);
+    margin-top: var(--spacing-md);
+}
+
+/* Comparison Section */
+.comparison-section {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.comparison-section h3 {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.25rem;
+}
+
+.comparison-table {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.comparison-row {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+}
+
+.comparison-row.header {
+    font-weight: 600;
+    background: var(--background);
+}
+
+.comparison-cell {
+    flex: 1;
+    padding: var(--spacing-md);
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+.comparison-cell.feature {
+    text-align: left;
+    font-weight: 500;
+}
+
+/* FAQ Section */
+.faq-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.faq-section h3 {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.25rem;
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.faq-item {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.faq-question {
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--primary);
+}
+
+.faq-answer {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+/* Guarantee Section */
+.guarantee-section {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    color: white;
+}
+
+.guarantee-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: var(--spacing-md);
+}
+
+.guarantee-content h4 {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.guarantee-content p {
+    opacity: 0.9;
+    font-size: 0.875rem;
+}
+
+/* Loading State */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.loading-spinner {
+    background: var(--surface);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    text-align: center;
+}
+
+.loading-spinner .spinner {
+    width: 40px;
+    height: 40px;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .pricing-card.featured {
+        transform: none;
+    }
+    
+    .pricing-card.featured:hover {
+        transform: translateY(-5px);
+    }
+    
+    .faq-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .comparison-cell {
+        padding: var(--spacing-sm);
+        font-size: 0.75rem;
+    }
+    
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+}

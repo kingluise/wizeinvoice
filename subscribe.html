@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Subscribe - Wize Invoice</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/subscribe.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/dashboard.html" class="navbar-brand">
+                <span>📄 Wize Invoice</span>
+            </a>
+            <div class="navbar-menu">
+                <a href="/dashboard.html" class="navbar-link">Dashboard</a>
+                <a href="/invoice-create.html" class="navbar-link">Create Invoice</a>
+                <a href="/settings.html" class="navbar-link">Settings</a>
+                <a href="/subscribe.html" class="navbar-link active">Subscribe</a>
+                <a href="/admin.html" class="navbar-link hidden" id="admin-link">Admin Panel</a>
+            </div>
+            <div id="auth-buttons" class="navbar-user">
+                <a href="/login.html" class="btn btn-outline">Login</a>
+                <a href="/register.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            <div id="user-menu" class="navbar-user hidden">
+                <span id="user-name" class="user-name"></span>
+                <button id="logout-btn" class="btn btn-outline btn-sm">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Alert Container -->
+    <div id="alert-container" class="alert-container"></div>
+
+    <!-- Main Content -->
+    <main class="subscribe-container">
+        <div class="container">
+            <div class="page-header">
+                <h1>Choose Your Plan</h1>
+                <p>Upgrade to Premium and unlock unlimited invoicing</p>
+            </div>
+
+            <!-- Trial Status Banner -->
+            <div id="trial-status" class="trial-status-card">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+
+            <!-- Pricing Grid -->
+            <div class="pricing-grid">
+                <!-- Free Plan -->
+                <div class="pricing-card free">
+                    <div class="pricing-badge">Current Plan</div>
+                    <h2>Free Trial</h2>
+                    <div class="pricing-price">₦0</div>
+                    <p class="pricing-period">14-day trial</p>
+                    <ul class="pricing-features">
+                        <li>✓ All features included</li>
+                        <li>✓ Unlimited invoices</li>
+                        <li>✓ Logo & signature upload</li>
+                        <li>✓ 5 themes to choose from</li>
+                        <li>✓ Email support</li>
+                        <li class="feature-muted">✗ Priority support</li>
+                        <li class="feature-muted">✗ WhatsApp invoicing</li>
+                    </ul>
+                    <button class="btn btn-outline btn-block" disabled>Current Plan</button>
+                </div>
+
+                <!-- Premium Plan -->
+                <div class="pricing-card premium featured">
+                    <div class="pricing-badge popular">Most Popular</div>
+                    <h2>Premium</h2>
+                    <div class="pricing-price">₦5,000</div>
+                    <p class="pricing-period">per month</p>
+                    <ul class="pricing-features">
+                        <li>✓ All Free Trial features</li>
+                        <li>✓ Continue after trial ends</li>
+                        <li>✓ Priority support</li>
+                        <li>✓ WhatsApp invoicing <span class="badge-new">Soon</span></li>
+                        <li>✓ API access</li>
+                        <li>✓ Export to Excel/CSV</li>
+                        <li>✓ Advanced analytics</li>
+                    </ul>
+                    <button id="subscribe-btn" class="btn btn-primary btn-block">Subscribe Now</button>
+                    <p class="payment-note">🔒 Secure payment via Paystack</p>
+                </div>
+            </div>
+
+            <!-- Features Comparison Table -->
+            <div class="comparison-section">
+                <h3>Feature Comparison</h3>
+                <div class="comparison-table">
+                    <div class="comparison-row header">
+                        <div class="comparison-cell feature">Feature</div>
+                        <div class="comparison-cell">Free Trial</div>
+                        <div class="comparison-cell">Premium</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature">Unlimited Invoices</div>
+                        <div class="comparison-cell">✓</div>
+                        <div class="comparison-cell">✓</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature">Custom Logo</div>
+                        <div class="comparison-cell">✓</div>
+                        <div class="comparison-cell">✓</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature">Digital Signature</div>
+                        <div class="comparison-cell">✓</div>
+                        <div class="comparison-cell">✓</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature">Multiple Themes</div>
+                        <div class="comparison-cell">✓</div>
+                        <div class="comparison-cell">✓</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature">Trial Duration</div>
+                        <div class="comparison-cell">14 days</div>
+                        <div class="comparison-cell">Unlimited</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature">Priority Support</div>
+                        <div class="comparison-cell">✗</div>
+                        <div class="comparison-cell">✓</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature">WhatsApp Invoicing</div>
+                        <div class="comparison-cell">✗</div>
+                        <div class="comparison-cell">✓ (Soon)</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature">API Access</div>
+                        <div class="comparison-cell">✗</div>
+                        <div class="comparison-cell">✓</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature">Export Data</div>
+                        <div class="comparison-cell">✗</div>
+                        <div class="comparison-cell">✓</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <h3>Frequently Asked Questions</h3>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question">What happens after my trial ends?</div>
+                        <div class="faq-answer">You will need to subscribe to Premium to continue creating invoices. Your existing invoices will remain accessible.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Can I cancel anytime?</div>
+                        <div class="faq-answer">Yes, you can cancel your subscription at any time. No long-term contracts.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">What payment methods are accepted?</div>
+                        <div class="faq-answer">We accept all major debit/credit cards, bank transfers, and USSD via Paystack.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Is my data secure?</div>
+                        <div class="faq-answer">Yes, we use bank-grade encryption to protect your data.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Will my invoices be affected if I downgrade?</div>
+                        <div class="faq-answer">Your invoices remain accessible, but you cannot create new ones until you subscribe again.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Do you offer annual billing?</div>
+                        <div class="faq-answer">Coming soon! Stay tuned for annual plans with discounts.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Money Back Guarantee -->
+            <div class="guarantee-section">
+                <div class="guarantee-content">
+                    <span class="guarantee-icon">🛡️</span>
+                    <h4>14-Day Money Back Guarantee</h4>
+                    <p>If you're not satisfied with Premium, we'll refund your payment within 14 days. No questions asked.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <div class="bottom-nav">
+        <button class="bottom-nav-item" onclick="window.location.href='/dashboard.html'">
+            <span class="bottom-nav-icon">📊</span>
+            <span>Dashboard</span>
+        </button>
+        <button class="bottom-nav-item" onclick="window.location.href='/invoice-create.html'">
+            <span class="bottom-nav-icon">➕</span>
+            <span>Create</span>
+        </button>
+        <button class="bottom-nav-item" onclick="window.location.href='/settings.html'">
+            <span class="bottom-nav-icon">⚙️</span>
+            <span>Settings</span>
+        </button>
+        <button class="bottom-nav-item active" onclick="window.location.href='/subscribe.html'">
+            <span class="bottom-nav-icon">💎</span>
+            <span>Upgrade</span>
+        </button>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/subscribe.js"></script>
+</body>
+</html>

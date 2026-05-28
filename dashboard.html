@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Dashboard - Wize Invoice</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/dashboard.html" class="navbar-brand">
+                <span>📄 Wize Invoice</span>
+            </a>
+            <div class="navbar-menu">
+                <a href="/dashboard.html" class="navbar-link active">Dashboard</a>
+                <a href="/invoice-create.html" class="navbar-link">Create Invoice</a>
+                <a href="/settings.html" class="navbar-link">Settings</a>
+                <a href="/subscribe.html" class="navbar-link" id="subscribe-link">Subscribe</a>
+                <a href="/admin.html" class="navbar-link hidden" id="admin-link">Admin Panel</a>
+            </div>
+            <div id="auth-buttons" class="navbar-user">
+                <a href="/login.html" class="btn btn-outline">Login</a>
+                <a href="/register.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            <div id="user-menu" class="navbar-user hidden">
+                <span id="user-name" class="user-name"></span>
+                <button id="logout-btn" class="btn btn-outline btn-sm">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Trial Banner -->
+    <div id="trial-banner" class="trial-banner hidden"></div>
+
+    <!-- Alert Container -->
+    <div id="alert-container" class="alert-container"></div>
+
+    <!-- Main Content -->
+    <main class="dashboard-container">
+        <div class="container">
+            <!-- Welcome Header -->
+            <div class="dashboard-header">
+                <div>
+                    <h1>Welcome back, <span id="welcome-name">...</span></h1>
+                    <p class="dashboard-subtitle">Manage your invoices and track payments</p>
+                </div>
+                <div>
+                    <a href="/invoice-create.html" class="btn btn-primary">+ Create New Invoice</a>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📄</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="total-invoices">0</div>
+                        <div class="stat-label">Total Invoices</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="total-amount">₦0</div>
+                        <div class="stat-label">Total Amount</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="trial-days">14</div>
+                        <div class="stat-label">Trial Days Left</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="paid-status">Free Trial</div>
+                        <div class="stat-label">Account Status</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Invoices Section -->
+            <div class="recent-invoices">
+                <div class="section-header">
+                    <h3>Recent Invoices</h3>
+                    <a href="/invoice-create.html" class="btn btn-outline btn-sm">Create New</a>
+                </div>
+
+                <div id="invoices-loading" class="loading-container">
+                    <div class="spinner-large"></div>
+                    <p>Loading invoices...</p>
+                </div>
+
+                <div id="invoices-empty" class="empty-state hidden">
+                    <div class="empty-icon">📭</div>
+                    <h3>No invoices yet</h3>
+                    <p>Create your first invoice to get started</p>
+                    <a href="/invoice-create.html" class="btn btn-primary">Create Invoice</a>
+                </div>
+
+                <div id="invoices-table" class="invoices-table-container hidden">
+                    <table class="invoices-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Client</th>
+                                <th>Date</th>
+                                <th>Due Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoices-list">
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="section-header">
+                    <h3>Quick Actions</h3>
+                </div>
+                <div class="actions-grid">
+                    <a href="/invoice-create.html" class="action-card">
+                        <div class="action-icon">📝</div>
+                        <div class="action-title">New Invoice</div>
+                        <div class="action-desc">Create a professional invoice</div>
+                    </a>
+                    <a href="/settings.html" class="action-card">
+                        <div class="action-icon">🎨</div>
+                        <div class="action-title">Customize Branding</div>
+                        <div class="action-desc">Add logo & signature</div>
+                    </a>
+                    <a href="#" class="action-card" id="whatsapp-action">
+                        <div class="action-icon">💬</div>
+                        <div class="action-title">WhatsApp Invoice</div>
+                        <div class="action-desc">Coming soon</div>
+                        <span class="badge-new">Soon</span>
+                    </a>
+                    <a href="/subscribe.html" class="action-card" id="subscribe-action">
+                        <div class="action-icon">💎</div>
+                        <div class="action-title">Upgrade Plan</div>
+                        <div class="action-desc">Get more features</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <div class="bottom-nav">
+        <button class="bottom-nav-item active" onclick="window.location.href='/dashboard.html'">
+            <span class="bottom-nav-icon">📊</span>
+            <span>Dashboard</span>
+        </button>
+        <button class="bottom-nav-item" onclick="window.location.href='/invoice-create.html'">
+            <span class="bottom-nav-icon">➕</span>
+            <span>Create</span>
+        </button>
+        <button class="bottom-nav-item" onclick="window.location.href='/settings.html'">
+            <span class="bottom-nav-icon">⚙️</span>
+            <span>Settings</span>
+        </button>
+        <button class="bottom-nav-item" id="mobile-subscribe" onclick="window.location.href='/subscribe.html'">
+            <span class="bottom-nav-icon">💎</span>
+            <span>Upgrade</span>
+        </button>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

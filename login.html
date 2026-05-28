@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Login - Wize Invoice</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <a href="/index.html" class="auth-logo">📄 Wize Invoice</a>
+                <h2>Welcome Back</h2>
+                <p>Sign in to your account to continue</p>
+            </div>
+
+            <div id="alert-container" class="auth-alert-container"></div>
+
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password <span class="required">*</span></label>
+                    <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password" required>
+                    <div class="password-toggle" onclick="togglePassword()">👁️</div>
+                </div>
+
+                <div class="form-group auth-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember-me"> Remember me
+                    </label>
+                    <a href="/forgot-password.html" class="forgot-link">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-login">Sign In</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="/register.html">Sign up free</a></p>
+            </div>
+
+            <div class="auth-divider">
+                <span>Or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <button class="btn btn-outline social-btn" onclick="socialLogin('google')">
+                    <span>G</span> Google
+                </button>
+                <button class="btn btn-outline social-btn" onclick="socialLogin('microsoft')">
+                    <span>M</span> Microsoft
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

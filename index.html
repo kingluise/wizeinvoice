@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Wize Invoice - Smart Invoicing Made Simple</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/index.html" class="navbar-brand">
+                <span>📄 Wize Invoice</span>
+            </a>
+            <div class="navbar-menu">
+                <a href="#features" class="navbar-link">Features</a>
+                <a href="#pricing" class="navbar-link">Pricing</a>
+                <a href="#testimonials" class="navbar-link">Testimonials</a>
+            </div>
+            <div id="auth-buttons" class="navbar-user">
+                <a href="/login.html" class="btn btn-outline">Login</a>
+                <a href="/register.html" class="btn btn-primary">Sign Up Free</a>
+            </div>
+            <div id="user-menu" class="navbar-user hidden">
+                <a href="/dashboard.html" class="btn btn-outline">Dashboard</a>
+                <button id="logout-btn" class="btn btn-outline">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Alert Container -->
+    <div id="alert-container" class="alert-container"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Smart Invoicing Made Simple</h1>
+            <p>Create professional invoices in seconds. Get paid faster. Manage your business with ease.</p>
+            <div class="hero-buttons">
+                <a href="/register.html" class="btn btn-primary btn-lg">Start Free Trial</a>
+                <a href="#features" class="btn btn-outline btn-lg">Learn More</a>
+            </div>
+            <p class="trial-note">⭐ 14-day free trial. No credit card required.</p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Everything You Need to Invoice</h2>
+                <p>Powerful features to streamline your billing process</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Professional Invoices</h3>
+                    <p>Create beautiful, branded invoices with your logo and signature</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>WhatsApp Invoicing <span class="badge-new">Coming Soon</span></h3>
+                    <p>Create and send invoices directly through WhatsApp chat</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Multiple Themes</h3>
+                    <p>Choose from 5 beautiful color themes to match your brand</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Create invoices on the go with our mobile-optimized design</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>Share via WhatsApp</h3>
+                    <p>Share invoice links directly to your clients via WhatsApp</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Secure & Reliable</h3>
+                    <p>Your data is encrypted and securely stored</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2>Simple, Transparent Pricing</h2>
+                <p>Start with a 14-day free trial, then choose the plan that works for you</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free Trial</h3>
+                    <div class="pricing-price">₦0<span>/14 days</span></div>
+                    <ul class="pricing-features">
+                        <li>All features included</li>
+                        <li>Unlimited invoices</li>
+                        <li>Logo & signature upload</li>
+                        <li>5 themes to choose from</li>
+                        <li>Email support</li>
+                    </ul>
+                    <a href="/register.html" class="btn btn-outline btn-block">Start Free Trial</a>
+                </div>
+                <div class="pricing-card popular">
+                    <div class="popular-badge">Most Popular</div>
+                    <h3>Premium</h3>
+                    <div class="pricing-price">₦5,000<span>/month</span></div>
+                    <ul class="pricing-features">
+                        <li>Everything in Free Trial</li>
+                        <li>Continue after trial ends</li>
+                        <li>Priority support</li>
+                        <li>WhatsApp invoicing (coming soon)</li>
+                        <li>API access</li>
+                    </ul>
+                    <a href="/register.html" class="btn btn-primary btn-block">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Loved by Business Owners</h2>
+                <p>Join thousands of satisfied customers</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">A</div>
+                    <div class="testimonial-text">"Wize Invoice has transformed how I bill my clients. So simple and professional!"</div>
+                    <div class="testimonial-name">— Adeola O., Freelancer</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">C</div>
+                    <div class="testimonial-text">"The WhatsApp feature is a game-changer. My clients love how easy it is."</div>
+                    <div class="testimonial-name">— Chidi N., Consultant</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">F</div>
+                    <div class="testimonial-text">"Best invoicing platform for Nigerian businesses. Simple and affordable."</div>
+                    <div class="testimonial-name">— Funke A., Small Business Owner</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Start Invoicing?</h2>
+            <p>Join thousands of businesses using Wize Invoice to get paid faster.</p>
+            <a href="/register.html" class="btn btn-primary">Start Your 14-Day Free Trial</a>
+            <p class="cta-note">No credit card required. Cancel anytime.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>Wize Invoice</h4>
+                    <a href="#features">Features</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#testimonials">Testimonials</a>
+                </div>
+                <div>
+                    <h4>Support</h4>
+                    <a href="mailto:support@wizeinvoice.com">Email Us</a>
+                    <a href="#">Help Center</a>
+                    <a href="#">FAQs</a>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <a href="mailto:hello@wizeinvoice.com">hello@wizeinvoice.com</a>
+                    <p class="contact-location">📍 Lagos, Nigeria</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Wize Invoice. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/landing.js"></script>
+
+    <!-- Live Chat Integration (Tawk.to - Replace with your widget ID) -->
+    <script>
+        var Tawk_API = Tawk_API || {};
+        var user = getCurrentUser();
+        if (user) {
+            Tawk_API.visitor = {
+                name: user.fullName || user.email,
+                email: user.email
+            };
+        }
+    </script>
+</body>
+</html>
