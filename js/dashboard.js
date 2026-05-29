@@ -64,7 +64,7 @@ async function loadInvoices() {
     }
 }
 
-// ✅ Build invoice row with status badge + status action buttons
+// Build invoice row with status badge + status action buttons
 function createInvoiceRow(invoice) {
     const row = document.createElement('tr');
     row.id = `invoice-row-${invoice.id}`;
@@ -100,7 +100,7 @@ function createInvoiceRow(invoice) {
     return row;
 }
 
-// ✅ Status label helper
+// Status label helper
 function getStatusLabel(status) {
     const labels = {
         paid:      '✅ Paid',
@@ -111,7 +111,7 @@ function getStatusLabel(status) {
     return labels[status] || '⏳ Pending';
 }
 
-// ✅ Toggle status dropdown menu
+// Toggle status dropdown menu
 window.toggleStatusMenu = function(invoiceId) {
     // Close all other open menus first
     document.querySelectorAll('.status-dropdown').forEach(menu => {
@@ -123,7 +123,7 @@ window.toggleStatusMenu = function(invoiceId) {
     if (menu) menu.classList.toggle('hidden');
 };
 
-// ✅ Close status menus when clicking outside
+// Close status menus when clicking outside
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.status-dropdown-wrapper')) {
         document.querySelectorAll('.status-dropdown').forEach(menu => {
@@ -132,7 +132,7 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// ✅ Change invoice status
+// Change invoice status
 window.changeInvoiceStatus = async function(invoiceId, newStatus) {
     // Close the dropdown
     const menu = document.getElementById(`status-menu-${invoiceId}`);
@@ -190,7 +190,8 @@ async function loadTrialInfo() {
             const subscribeAction = document.getElementById('subscribe-action');
             const mobileSubscribe = document.getElementById('mobile-subscribe');
 
-            if (!trialInfo.isPaidUser && (trialInfo.isExpired || trialInfo.daysRemaining <= 3)) {
+            // UPDATED: Show subscribe button for ALL free trial users (not paid)
+            if (!trialInfo.isPaidUser) {
                 subscribeLink?.classList.remove('hidden');
                 if (subscribeAction) subscribeAction.style.display = 'flex';
                 if (mobileSubscribe) mobileSubscribe.style.display = 'flex';

@@ -1,24 +1,25 @@
 /* ========================================
    WIZE INVOICE - DASHBOARD STYLES
+   Mobile-First Approach
    ======================================== */
 
+/* Mobile Styles (default - 320px and up) */
 .dashboard-container {
-    padding: var(--spacing-xl) 0;
+    padding: var(--spacing-lg) 0;
     min-height: calc(100vh - 64px);
 }
 
-/* Dashboard Header */
+/* Dashboard Header - Mobile */
 .dashboard-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-xl);
-    flex-wrap: wrap;
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
     gap: var(--spacing-md);
 }
 
 .dashboard-header h1 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     margin-bottom: var(--spacing-xs);
 }
 
@@ -27,41 +28,42 @@
     font-size: 0.875rem;
 }
 
-/* Stats Grid */
+/* Stats Grid - Mobile (1 column) */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
 }
 
 .stat-card {
     background: var(--surface);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
     box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
     cursor: pointer;
+    min-height: 100px;
 }
 
-.stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
+.stat-card:active {
+    transform: scale(0.98);
 }
 
 .stat-icon {
-    font-size: 2.5rem;
+    font-size: 2rem;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: var(--radius-lg);
     color: white;
+    flex-shrink: 0;
 }
 
 .stat-info {
@@ -69,9 +71,10 @@
 }
 
 .stat-value {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text);
+    line-height: 1.2;
 }
 
 .stat-label {
@@ -80,59 +83,65 @@
     margin-top: 4px;
 }
 
-/* Section Header */
+/* Section Header - Mobile */
 .section-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
 }
 
 .section-header h3 {
     font-size: 1.25rem;
 }
 
-/* Recent Invoices */
+/* Recent Invoices - Mobile */
 .recent-invoices {
     background: var(--surface);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
     box-shadow: var(--shadow-sm);
 }
 
-/* Invoices Table */
+/* Invoices Table - Mobile (horizontal scroll) */
 .invoices-table-container {
     overflow-x: auto;
+    margin: 0 calc(-1 * var(--spacing-md));
+    padding: 0 var(--spacing-md);
 }
 
 .invoices-table {
     width: 100%;
+    min-width: 600px;
     border-collapse: collapse;
 }
 
 .invoices-table th {
     text-align: left;
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     background-color: var(--background);
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: var(--text-light);
     border-bottom: 1px solid var(--border);
 }
 
 .invoices-table td {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-bottom: 1px solid var(--border);
-    font-size: 0.875rem;
+    font-size: 0.75rem;
+    vertical-align: middle;
 }
 
 .invoice-status {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 4px 8px;
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .status-paid {
@@ -145,15 +154,22 @@
     color: #991b1b;
 }
 
+.status-pending,
 .status-overdue {
     background-color: #fed7aa;
     color: #92400e;
 }
 
-/* Action Buttons */
+.status-cancelled {
+    background-color: #f1f5f9;
+    color: #475569;
+}
+
+/* Action Buttons - Mobile (touch-friendly) */
 .action-buttons {
     display: flex;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
 }
 
 .btn-icon {
@@ -161,40 +177,85 @@
     border: none;
     cursor: pointer;
     font-size: 1.125rem;
-    padding: var(--spacing-xs);
+    padding: 8px;
     border-radius: var(--radius-sm);
     transition: background 0.2s;
+    min-width: 36px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.btn-icon:hover {
+.btn-icon:active {
     background-color: var(--background);
 }
 
-/* Empty State */
+/* Status Dropdown - Mobile */
+.status-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-status {
+    background: transparent;
+}
+
+.status-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
+    min-width: 120px;
+}
+
+.status-option {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: background 0.2s;
+}
+
+.status-option:active {
+    background-color: var(--background);
+}
+
+/* Empty State - Mobile */
 .empty-state {
     text-align: center;
-    padding: var(--spacing-2xl);
+    padding: var(--spacing-xl);
 }
 
 .empty-icon {
-    font-size: 4rem;
-    margin-bottom: var(--spacing-lg);
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
     opacity: 0.5;
 }
 
 .empty-state h3 {
     margin-bottom: var(--spacing-sm);
+    font-size: 1.125rem;
 }
 
 .empty-state p {
     color: var(--text-light);
     margin-bottom: var(--spacing-lg);
+    font-size: 0.875rem;
 }
 
-/* Loading State */
+/* Loading State - Mobile */
 .loading-container {
     text-align: center;
-    padding: var(--spacing-2xl);
+    padding: var(--spacing-xl);
 }
 
 .spinner-large {
@@ -207,21 +268,21 @@
     margin: 0 auto var(--spacing-md);
 }
 
-/* Quick Actions */
+/* Quick Actions - Mobile (2 columns) */
 .quick-actions {
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
 }
 
 .actions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-md);
 }
 
 .action-card {
     background: var(--surface);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     text-align: center;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -229,14 +290,12 @@
     position: relative;
 }
 
-.action-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--primary);
+.action-card:active {
+    transform: scale(0.98);
 }
 
 .action-icon {
-    font-size: 2rem;
+    font-size: 1.75rem;
     margin-bottom: var(--spacing-sm);
 }
 
@@ -244,18 +303,23 @@
     font-weight: 600;
     color: var(--text);
     margin-bottom: var(--spacing-xs);
+    font-size: 0.875rem;
 }
 
 .action-desc {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-light);
 }
 
 .action-card .badge-new {
     position: absolute;
-    top: -10px;
-    right: 10px;
-    font-size: 0.65rem;
+    top: -8px;
+    right: 8px;
+    font-size: 0.6rem;
+    background: var(--primary);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 12px;
 }
 
 /* User Name in Navbar */
@@ -265,47 +329,152 @@
     margin-right: var(--spacing-md);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .dashboard-header {
-        flex-direction: column;
-        text-align: center;
+/* ========================================
+   TABLET STYLES (min-width: 768px)
+   ======================================== */
+@media (min-width: 768px) {
+    .dashboard-container {
+        padding: var(--spacing-xl) 0;
     }
-    
+
+    .dashboard-header {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.75rem;
+    }
+
+    /* Stats Grid - Tablet (2 columns) */
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
     }
-    
+
     .stat-card {
-        padding: var(--spacing-md);
+        padding: var(--spacing-lg);
+        min-height: auto;
     }
-    
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+    }
+
     .stat-icon {
-        width: 45px;
-        height: 45px;
-        font-size: 1.5rem;
+        width: 60px;
+        height: 60px;
+        font-size: 2.5rem;
     }
-    
+
     .stat-value {
+        font-size: 1.75rem;
+    }
+
+    /* Section Header - Tablet */
+    .section-header {
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .section-header h3 {
         font-size: 1.25rem;
     }
-    
+
+    /* Recent Invoices - Tablet */
+    .recent-invoices {
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .invoices-table-container {
+        margin: 0;
+        padding: 0;
+    }
+
     .invoices-table th,
     .invoices-table td {
-        padding: var(--spacing-sm);
+        padding: var(--spacing-md);
+        font-size: 0.875rem;
     }
-    
+
+    .invoices-table th {
+        font-size: 0.875rem;
+    }
+
+    .btn-icon {
+        padding: var(--spacing-xs);
+    }
+
+    .btn-icon:hover {
+        background-color: var(--background);
+    }
+
+    .status-option:hover {
+        background-color: var(--background);
+    }
+
+    /* Quick Actions - Tablet */
     .actions-grid {
-        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+
+    .action-card {
+        padding: var(--spacing-lg);
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
+    }
+
+    .action-icon {
+        font-size: 2rem;
+    }
+
+    .action-title {
+        font-size: 1rem;
+    }
+
+    .action-desc {
+        font-size: 0.75rem;
     }
 }
 
-@media (max-width: 480px) {
+/* ========================================
+   DESKTOP STYLES (min-width: 1024px)
+   ======================================== */
+@media (min-width: 1024px) {
+    /* Stats Grid - Desktop (4 columns) */
     .stats-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(4, 1fr);
     }
-    
+
+    /* Quick Actions - Desktop (4 columns) */
     .actions-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .invoices-table {
+        min-width: auto;
+    }
+}
+
+/* ========================================
+   LARGE DESKTOP (min-width: 1280px)
+   ======================================== */
+@media (min-width: 1280px) {
+    .stats-grid {
+        gap: var(--spacing-xl);
+    }
+
+    .actions-grid {
+        gap: var(--spacing-xl);
     }
 }

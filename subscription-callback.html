@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Callback - Wize Invoice</title>
+    <title>Payment Callback - Wize Billing</title>
     <link rel="stylesheet" href="css/base.css">
     <style>
         .callback-container {
@@ -105,7 +105,7 @@
         function showSuccess(plan) {
             iconEl.textContent    = '🎉';
             titleEl.textContent   = 'Payment Successful!';
-            msgEl.textContent     = `Welcome to Wize Invoice Premium${plan ? ' — ' + plan : ''}! You now have unlimited access.`;
+            msgEl.textContent     = `Welcome to Wize Billing Premium${plan ? ' — ' + plan : ''}! You now have unlimited access.`;
             spinnerEl.style.display = 'none';
             actionEl.style.display  = 'block';
             actionEl.innerHTML = `<a href="/dashboard.html" class="btn-dashboard">Go to Dashboard →</a>`;
