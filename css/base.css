@@ -284,17 +284,62 @@ a:hover {
     height: 64px;
 }
 
+/* ========================================
+   NEW LOGO STYLES - Option 4: WIZE / BILL
+   ======================================== */
 .navbar-brand {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--primary);
+    text-decoration: none;
 }
 
+.logo-box {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    text-align: center;
+    line-height: 1.2;
+    transition: transform 0.2s ease;
+}
+
+.logo-box:hover {
+    transform: scale(1.02);
+}
+
+.logo-line {
+    display: block;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.logo-line:first-child {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2px;
+}
+
+.logo-line:last-child {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.5px;
+}
+
+/* Mobile Logo */
+@media (max-width: 768px) {
+    .logo-box {
+        padding: 6px 10px;
+    }
+    
+    .logo-line:first-child {
+        font-size: 0.85rem;
+    }
+    
+    .logo-line:last-child {
+        font-size: 0.6rem;
+    }
+}
+
+/* Remove old navbar-brand styles */
 .navbar-brand img {
-    height: 32px;
+    display: none;
 }
 
 .navbar-menu {
@@ -317,6 +362,15 @@ a:hover {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
+}
+
+/* Logout Button - Smaller on Mobile */
+@media (max-width: 768px) {
+    #logout-btn,
+    .navbar-user .btn-outline {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+    }
 }
 
 /* Bottom Navigation (Mobile) */
