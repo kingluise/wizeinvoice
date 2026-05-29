@@ -276,6 +276,20 @@
     margin-bottom: var(--spacing-md);
 }
 
+/* Dynamic pricing note */
+.pricing-country-note {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-light);
+    margin-top: 6px;
+}
+
+.price-loading {
+    font-size: 1rem;
+    color: var(--text-light);
+    font-weight: 400;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .pricing-grid {

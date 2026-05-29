@@ -46,7 +46,7 @@
 
             <!-- Trial Status Banner -->
             <div id="trial-status" class="trial-status-card">
-                <!-- Dynamic content will be inserted here -->
+                <div class="status-title">⏳ Loading your plan status...</div>
             </div>
 
             <!-- Pricing Grid -->
@@ -61,7 +61,7 @@
                         <li>✓ All features included</li>
                         <li>✓ Unlimited invoices</li>
                         <li>✓ Logo & signature upload</li>
-                        <li>✓ 5 themes to choose from</li>
+                        <li>✓ 8 themes to choose from</li>
                         <li>✓ Email support</li>
                         <li class="feature-muted">✗ Priority support</li>
                         <li class="feature-muted">✗ WhatsApp invoicing</li>
@@ -73,8 +73,11 @@
                 <div class="pricing-card premium featured">
                     <div class="pricing-badge popular">Most Popular</div>
                     <h2>Premium</h2>
-                    <div class="pricing-price">₦5,000</div>
-                    <p class="pricing-period">per month</p>
+                    <!-- ✅ Dynamic price — updated by JS -->
+                    <div class="pricing-price" id="premium-price">
+                        <span class="price-loading">Loading...</span>
+                    </div>
+                    <p class="pricing-period" id="premium-period">per month</p>
                     <ul class="pricing-features">
                         <li>✓ All Free Trial features</li>
                         <li>✓ Continue after trial ends</li>
@@ -84,8 +87,12 @@
                         <li>✓ Export to Excel/CSV</li>
                         <li>✓ Advanced analytics</li>
                     </ul>
-                    <button id="subscribe-btn" class="btn btn-primary btn-block">Subscribe Now</button>
+                    <button id="subscribe-btn" class="btn btn-primary btn-block">
+                        Subscribe Now
+                    </button>
                     <p class="payment-note">🔒 Secure payment via Paystack</p>
+                    <!-- ✅ Country/currency info -->
+                    <p id="pricing-note" class="pricing-country-note"></p>
                 </div>
             </div>
 
@@ -164,7 +171,7 @@
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">Is my data secure?</div>
-                        <div class="faq-answer">Yes, we use bank-grade encryption to protect your data.</div>
+                        <div class="faq-answer">Yes, we use bank-grade encryption to protect your data and payments.</div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">Will my invoices be affected if I downgrade?</div>

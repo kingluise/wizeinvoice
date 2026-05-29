@@ -239,7 +239,7 @@ const api = {
         method: 'DELETE'
     }),
 
-    // Invoices - FIXED URLs to match backend controller (InvoiceController)
+    // Invoices
     createInvoice: (data) => apiRequest('/invoice/create', {
         method: 'POST',
         body: JSON.stringify(data)
@@ -250,6 +250,12 @@ const api = {
     getInvoice: (id) => apiRequest(`/invoice/${id}`),
 
     downloadInvoice: (id) => apiRequest(`/invoice/download/${id}`),
+
+    // ✅ Update invoice status
+    updateInvoiceStatus: (invoiceId, status) => apiRequest(`/invoice/${invoiceId}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status })
+    }),
 
     // Billing
     subscribe: () => apiRequest('/billing/subscribe', {

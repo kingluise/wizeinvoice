@@ -3,95 +3,56 @@
 // ========================================
 
 document.addEventListener('DOMContentLoaded', async function() {
-    // Check if user is logged in
     if (!requireAuth()) return;
-    
-    // Load dashboard data
+
     await loadDashboardData();
-    
-    // Load invoices
     await loadInvoices();
-    
-    // Load trial info
     await loadTrialInfo();
-    
-    // Setup event listeners
     setupEventListeners();
 });
 
 async function loadDashboardData() {
     const user = getCurrentUser();
     if (!user) return;
-    
-    // Update welcome message
+
     const welcomeName = document.getElementById('welcome-name');
-    if (welcomeName) {
-        welcomeName.textContent = user.fullName || user.email.split('@')[0];
-    }
-    
-    // Update user name in navbar
+    if (welcomeName) welcomeName.textContent = user.fullName || user.email.split('@')[0];
+
     const userNameSpan = document.getElementById('user-name');
-    if (userNameSpan) {
-        userNameSpan.textContent = user.fullName || user.email;
-    }
+    if (userNameSpan) userNameSpan.textContent = user.fullName || user.email;
 }
 
 async function loadInvoices() {
     const loadingEl = document.getElementById('invoices-loading');
-    const emptyEl = document.getElementById('invoices-empty');
-    const tableEl = document.getElementById('invoices-table');
-    const tbody = document.getElementById('invoices-list');
-    
+    const emptyEl   = document.getElementById('invoices-empty');
+    const tableEl   = document.getElementById('invoices-table');
+    const tbody     = document.getElementById('invoices-list');
+
     try {
         const response = await api.getInvoices();
-        
+
         if (response.success && response.invoices && response.invoices.length > 0) {
-            // Hide loading, show table
             loadingEl.classList.add('hidden');
             emptyEl.classList.add('hidden');
             tableEl.classList.remove('hidden');
-            
-            // Clear tbody
+
             tbody.innerHTML = '';
-            
-            // Calculate totals
+
             let totalAmount = 0;
-            
-            // Populate table
+
             response.invoices.forEach(invoice => {
                 totalAmount += invoice.totalAmount;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><strong>${invoice.invoiceNumber}</strong></td>
-                    <td>${escapeHtml(invoice.clientName)}</td>
-                    <td>${formatDate(invoice.invoiceDate)}</td>
-                    <td>${formatDate(invoice.dueDate)}</td>
-                    <td>${formatCurrency(invoice.totalAmount)}</td>
-                    <td><span class="invoice-status status-unpaid">Unpaid</span></td>
-                    <td class="action-buttons">
-                        <button class="btn-icon" onclick="viewInvoice(${invoice.id})" title="View">👁️</button>
-                        <button class="btn-icon" onclick="downloadInvoice(${invoice.id})" title="Download">📄</button>
-                        <button class="btn-icon" onclick="shareInvoice(${invoice.id}, '${invoice.clientName}', '${invoice.invoiceNumber}')" title="Share via WhatsApp">💬</button>
-                    </td>
-                `;
+                const row = createInvoiceRow(invoice);
                 tbody.appendChild(row);
             });
-            
-            // Update total amount stat
+
             const totalAmountEl = document.getElementById('total-amount');
-            if (totalAmountEl) {
-                totalAmountEl.textContent = formatCurrency(totalAmount);
-            }
-            
-            // Update total invoices stat
+            if (totalAmountEl) totalAmountEl.textContent = formatCurrency(totalAmount);
+
             const totalInvoicesEl = document.getElementById('total-invoices');
-            if (totalInvoicesEl) {
-                totalInvoicesEl.textContent = response.invoices.length;
-            }
-            
+            if (totalInvoicesEl) totalInvoicesEl.textContent = response.invoices.length;
+
         } else {
-            // No invoices
             loadingEl.classList.add('hidden');
             emptyEl.classList.remove('hidden');
             tableEl.classList.add('hidden');
@@ -103,20 +64,112 @@ async function loadInvoices() {
     }
 }
 
+// ✅ Build invoice row with status badge + status action buttons
+function createInvoiceRow(invoice) {
+    const row = document.createElement('tr');
+    row.id = `invoice-row-${invoice.id}`;
+
+    const status = invoice.status || 'pending';
+
+    row.innerHTML = `
+        <td><strong>${invoice.invoiceNumber}</strong></td>
+        <td>${escapeHtml(invoice.clientName)}</td>
+        <td>${formatDate(invoice.invoiceDate)}</td>
+        <td>${formatDate(invoice.dueDate)}</td>
+        <td>${formatCurrency(invoice.totalAmount)}</td>
+        <td>
+            <span id="status-badge-${invoice.id}" class="invoice-status status-${status}">
+                ${getStatusLabel(status)}
+            </span>
+        </td>
+        <td class="action-buttons">
+            <button class="btn-icon" onclick="viewInvoice(${invoice.id})" title="View">👁️</button>
+            <button class="btn-icon" onclick="downloadInvoice(${invoice.id})" title="Download">📄</button>
+            <button class="btn-icon" onclick="shareInvoice(${invoice.id}, '${escapeHtml(invoice.clientName)}', '${invoice.invoiceNumber}')" title="Share via WhatsApp">💬</button>
+            <div class="status-dropdown-wrapper">
+                <button class="btn-icon btn-status" onclick="toggleStatusMenu(${invoice.id})" title="Change Status">🔄</button>
+                <div id="status-menu-${invoice.id}" class="status-dropdown hidden">
+                    <button onclick="changeInvoiceStatus(${invoice.id}, 'paid')"      class="status-option status-opt-paid">✅ Paid</button>
+                    <button onclick="changeInvoiceStatus(${invoice.id}, 'unpaid')"    class="status-option status-opt-unpaid">💸 Unpaid</button>
+                    <button onclick="changeInvoiceStatus(${invoice.id}, 'pending')"   class="status-option status-opt-pending">⏳ Pending</button>
+                    <button onclick="changeInvoiceStatus(${invoice.id}, 'cancelled')" class="status-option status-opt-cancelled">❌ Cancelled</button>
+                </div>
+            </div>
+        </td>
+    `;
+    return row;
+}
+
+// ✅ Status label helper
+function getStatusLabel(status) {
+    const labels = {
+        paid:      '✅ Paid',
+        unpaid:    '💸 Unpaid',
+        pending:   '⏳ Pending',
+        cancelled: '❌ Cancelled'
+    };
+    return labels[status] || '⏳ Pending';
+}
+
+// ✅ Toggle status dropdown menu
+window.toggleStatusMenu = function(invoiceId) {
+    // Close all other open menus first
+    document.querySelectorAll('.status-dropdown').forEach(menu => {
+        if (menu.id !== `status-menu-${invoiceId}`) {
+            menu.classList.add('hidden');
+        }
+    });
+    const menu = document.getElementById(`status-menu-${invoiceId}`);
+    if (menu) menu.classList.toggle('hidden');
+};
+
+// ✅ Close status menus when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.status-dropdown-wrapper')) {
+        document.querySelectorAll('.status-dropdown').forEach(menu => {
+            menu.classList.add('hidden');
+        });
+    }
+});
+
+// ✅ Change invoice status
+window.changeInvoiceStatus = async function(invoiceId, newStatus) {
+    // Close the dropdown
+    const menu = document.getElementById(`status-menu-${invoiceId}`);
+    if (menu) menu.classList.add('hidden');
+
+    try {
+        const response = await api.updateInvoiceStatus(invoiceId, newStatus);
+
+        if (response.success) {
+            // Update the badge in place without reloading
+            const badge = document.getElementById(`status-badge-${invoiceId}`);
+            if (badge) {
+                badge.className = `invoice-status status-${newStatus}`;
+                badge.textContent = getStatusLabel(newStatus);
+            }
+            showAlert(`Invoice marked as ${newStatus}`, 'success');
+        } else {
+            showAlert(response.message || 'Failed to update status', 'error');
+        }
+    } catch (error) {
+        console.error('Status update error:', error);
+        showAlert('Failed to update invoice status', 'error');
+    }
+};
+
 async function loadTrialInfo() {
     try {
         const response = await api.getTrialInfo();
-        
+
         if (response.success && response.trialInfo) {
             const trialInfo = response.trialInfo;
-            
-            // Update trial days stat
+
             const trialDaysEl = document.getElementById('trial-days');
             if (trialDaysEl) {
                 trialDaysEl.textContent = trialInfo.isPaidUser ? '∞' : trialInfo.daysRemaining;
             }
-            
-            // Update paid status stat
+
             const paidStatusEl = document.getElementById('paid-status');
             if (paidStatusEl) {
                 if (trialInfo.isPaidUser) {
@@ -130,25 +183,19 @@ async function loadTrialInfo() {
                     paidStatusEl.style.color = 'var(--error)';
                 }
             }
-            
-            // Update trial banner
+
             updateTrialBannerDisplay(trialInfo);
-            
-            // Show/hide subscribe link
-            const subscribeLink = document.getElementById('subscribe-link');
+
+            const subscribeLink   = document.getElementById('subscribe-link');
             const subscribeAction = document.getElementById('subscribe-action');
             const mobileSubscribe = document.getElementById('mobile-subscribe');
-            
-            if (!trialInfo.isPaidUser && trialInfo.isExpired) {
-                if (subscribeLink) subscribeLink.classList.remove('hidden');
-                if (subscribeAction) subscribeAction.style.display = 'flex';
-                if (mobileSubscribe) mobileSubscribe.style.display = 'flex';
-            } else if (!trialInfo.isPaidUser && trialInfo.daysRemaining <= 3) {
-                if (subscribeLink) subscribeLink.classList.remove('hidden');
+
+            if (!trialInfo.isPaidUser && (trialInfo.isExpired || trialInfo.daysRemaining <= 3)) {
+                subscribeLink?.classList.remove('hidden');
                 if (subscribeAction) subscribeAction.style.display = 'flex';
                 if (mobileSubscribe) mobileSubscribe.style.display = 'flex';
             } else {
-                if (subscribeLink) subscribeLink.classList.add('hidden');
+                subscribeLink?.classList.add('hidden');
                 if (subscribeAction) subscribeAction.style.display = 'none';
                 if (mobileSubscribe) mobileSubscribe.style.display = 'none';
             }
@@ -161,25 +208,25 @@ async function loadTrialInfo() {
 function updateTrialBannerDisplay(trialInfo) {
     const banner = document.getElementById('trial-banner');
     if (!banner) return;
-    
+
     if (trialInfo.isPaidUser) {
         banner.classList.add('hidden');
         return;
     }
-    
+
     if (trialInfo.isExpired) {
         banner.innerHTML = `
-            <div class="alert alert-warning" style="margin: 0; border-radius: 0;">
-                ⚠️ Your 14-day free trial has expired! <a href="/subscribe.html">Subscribe now</a> to continue creating invoices.
-            </div>
-        `;
+            <div class="alert alert-warning" style="margin:0;border-radius:0;">
+                ⚠️ Your 14-day free trial has expired!
+                <a href="/subscribe.html">Subscribe now</a> to continue creating invoices.
+            </div>`;
         banner.classList.remove('hidden');
     } else if (trialInfo.daysRemaining <= 3) {
         banner.innerHTML = `
-            <div class="alert alert-warning" style="margin: 0; border-radius: 0;">
-                ⏰ Your trial ends in ${trialInfo.daysRemaining} day${trialInfo.daysRemaining !== 1 ? 's' : ''}. <a href="/subscribe.html">Subscribe now</a> to avoid interruption.
-            </div>
-        `;
+            <div class="alert alert-warning" style="margin:0;border-radius:0;">
+                ⏰ Your trial ends in ${trialInfo.daysRemaining} day${trialInfo.daysRemaining !== 1 ? 's' : ''}.
+                <a href="/subscribe.html">Subscribe now</a> to avoid interruption.
+            </div>`;
         banner.classList.remove('hidden');
     } else {
         banner.classList.add('hidden');
@@ -187,7 +234,6 @@ function updateTrialBannerDisplay(trialInfo) {
 }
 
 function setupEventListeners() {
-    // WhatsApp action button
     const whatsappAction = document.getElementById('whatsapp-action');
     if (whatsappAction) {
         whatsappAction.addEventListener('click', function(e) {
@@ -197,7 +243,6 @@ function setupEventListeners() {
     }
 }
 
-// Global functions for invoice actions
 window.viewInvoice = function(invoiceId) {
     window.location.href = `/invoice-view.html?id=${invoiceId}`;
 };
@@ -218,12 +263,10 @@ window.downloadInvoice = async function(invoiceId) {
 
 window.shareInvoice = function(invoiceId, clientName, invoiceNumber) {
     const shareUrl = `${window.location.origin}/invoice-view.html?id=${invoiceId}`;
-    const message = `📄 Invoice ${invoiceNumber} for ${clientName} is ready.\nView here: ${shareUrl}`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const message  = `📄 Invoice ${invoiceNumber} for ${clientName} is ready.\nView here: ${shareUrl}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
 };
 
-// Escape HTML to prevent XSS
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');

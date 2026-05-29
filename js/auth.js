@@ -3,58 +3,227 @@
 // Login, Register, Logout handlers
 // ========================================
 
-// Wait for DOM to load
+// ✅ Constants
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOGIN_ATTEMPTS_KEY = 'wize_login_attempts';
+const LOGIN_LOCKOUT_KEY  = 'wize_login_lockout';
+const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes in ms
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Setup login form if on login page
+    // ✅ Check token expiry on every page load
+    checkTokenExpiry();
+
     const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        setupLoginForm(loginForm);
-    }
+    if (loginForm) setupLoginForm(loginForm);
 
-    // Setup register form if on register page
     const registerForm = document.getElementById('register-form');
-    if (registerForm) {
-        setupRegisterForm(registerForm);
-    }
+    if (registerForm) setupRegisterForm(registerForm);
 
-    // Setup logout button if exists
     const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', handleLogout);
-    }
+    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
 
-    // Setup forgot password form
     const forgotForm = document.getElementById('forgot-form');
-    if (forgotForm) {
-        setupForgotForm(forgotForm);
-    }
+    if (forgotForm) setupForgotForm(forgotForm);
 
-    // Setup reset password form
     const resetForm = document.getElementById('reset-form');
-    if (resetForm) {
-        setupResetForm(resetForm);
-    }
+    if (resetForm) setupResetForm(resetForm);
 
-    // Check if user is logged in and update UI
     updateAuthUI();
 });
 
+// ✅ Check if JWT token is expired and redirect to login
+function checkTokenExpiry() {
+    const token = getAuthToken();
+    if (!token) return;
+
+    try {
+        // Decode JWT payload (base64)
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const expiryTime = payload.exp * 1000; // convert to ms
+        const now = Date.now();
+
+        if (now >= expiryTime) {
+            // Token expired — clear and redirect
+            clearAuthData();
+            const currentPage = window.location.pathname;
+            const publicPages = ['/login.html', '/register.html',
+                                 '/forgot-password.html', '/reset-password.html',
+                                 '/index.html', '/'];
+            if (!publicPages.includes(currentPage)) {
+                showAlert('Your session has expired. Please log in again.', 'warning');
+                setTimeout(() => {
+                    window.location.href = '/login.html?expired=true';
+                }, 1500);
+            }
+            return;
+        }
+
+        // ✅ Set a timer to auto-logout when token expires
+        const msUntilExpiry = expiryTime - now;
+        setTimeout(() => {
+            clearAuthData();
+            const currentPage = window.location.pathname;
+            const publicPages = ['/login.html', '/register.html',
+                                 '/forgot-password.html', '/reset-password.html',
+                                 '/index.html', '/'];
+            if (!publicPages.includes(currentPage)) {
+                showAlert('Your session has expired. Please log in again.', 'warning');
+                setTimeout(() => {
+                    window.location.href = '/login.html?expired=true';
+                }, 1500);
+            }
+        }, msUntilExpiry);
+
+    } catch (e) {
+        // Invalid token format — clear it
+        clearAuthData();
+    }
+}
+
+// ✅ Client-side rate limiting helpers
+function getLoginAttempts() {
+    return parseInt(localStorage.getItem(LOGIN_ATTEMPTS_KEY) || '0');
+}
+
+function incrementLoginAttempts() {
+    const attempts = getLoginAttempts() + 1;
+    localStorage.setItem(LOGIN_ATTEMPTS_KEY, attempts.toString());
+    return attempts;
+}
+
+function resetLoginAttempts() {
+    localStorage.removeItem(LOGIN_ATTEMPTS_KEY);
+    localStorage.removeItem(LOGIN_LOCKOUT_KEY);
+}
+
+function getLockoutEndTime() {
+    const val = localStorage.getItem(LOGIN_LOCKOUT_KEY);
+    return val ? parseInt(val) : null;
+}
+
+function setLockout() {
+    const lockoutEnd = Date.now() + LOCKOUT_DURATION_MS;
+    localStorage.setItem(LOGIN_LOCKOUT_KEY, lockoutEnd.toString());
+}
+
+function isLockedOut() {
+    const lockoutEnd = getLockoutEndTime();
+    if (!lockoutEnd) return false;
+    if (Date.now() < lockoutEnd) return true;
+    // Lockout expired — clear it
+    resetLoginAttempts();
+    return false;
+}
+
+function getLockoutMinutesRemaining() {
+    const lockoutEnd = getLockoutEndTime();
+    if (!lockoutEnd) return 0;
+    return Math.ceil((lockoutEnd - Date.now()) / 60000);
+}
+
+// ✅ Show attempts remaining indicator on login form
+function updateAttemptsUI(attemptsLeft) {
+    let indicator = document.getElementById('attempts-indicator');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'attempts-indicator';
+        indicator.style.cssText = `
+            margin-top: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-align: center;
+        `;
+        const form = document.getElementById('login-form');
+        if (form) form.appendChild(indicator);
+    }
+
+    if (attemptsLeft <= 2) {
+        indicator.style.background = '#fee2e2';
+        indicator.style.color = '#dc2626';
+        indicator.style.border = '1px solid #fca5a5';
+    } else {
+        indicator.style.background = '#fef3c7';
+        indicator.style.color = '#d97706';
+        indicator.style.border = '1px solid #fde68a';
+    }
+
+    indicator.textContent = `⚠️ ${attemptsLeft} login attempt(s) remaining before lockout`;
+    indicator.style.display = 'block';
+}
+
+function showLockoutUI(minutesLeft) {
+    let indicator = document.getElementById('attempts-indicator');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'attempts-indicator';
+        const form = document.getElementById('login-form');
+        if (form) form.appendChild(indicator);
+    }
+
+    indicator.style.cssText = `
+        margin-top: 8px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        text-align: center;
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fca5a5;
+        display: block;
+    `;
+
+    // Live countdown inside lockout message
+    function updateLockoutMessage() {
+        const minsLeft = getLockoutMinutesRemaining();
+        if (minsLeft <= 0) {
+            indicator.style.display = 'none';
+            const submitBtn = document.querySelector('#login-form button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = false;
+            return;
+        }
+        indicator.textContent = `🔒 Too many failed attempts. Try again in ${minsLeft} minute(s).`;
+        setTimeout(updateLockoutMessage, 30000); // update every 30s
+    }
+    updateLockoutMessage();
+
+    // Disable submit button during lockout
+    const submitBtn = document.querySelector('#login-form button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+}
+
 // Setup Login Form
 function setupLoginForm(form) {
+    // ✅ Check if already locked out on page load
+    if (isLockedOut()) {
+        showLockoutUI(getLockoutMinutesRemaining());
+    }
+
+    // ✅ Show expired session message if redirected
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('expired') === 'true') {
+        showAlert('Your session has expired. Please log in again.', 'warning');
+    }
+
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Get form values
-        const email = document.getElementById('email').value.trim();
+        // ✅ Block submission if locked out
+        if (isLockedOut()) {
+            showLockoutUI(getLockoutMinutesRemaining());
+            return;
+        }
+
+        const email    = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
 
-        // Validate
         if (!email || !password) {
             showAlert('Please fill in all fields', 'error');
             return;
         }
 
-        // Show loading
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
         submitBtn.disabled = true;
@@ -64,23 +233,35 @@ function setupLoginForm(form) {
             const response = await api.login({ email, password });
 
             if (response.success) {
-                // Save auth data
+                // ✅ Successful login — clear attempts
+                resetLoginAttempts();
                 setAuthData(response.token, response.user);
-
                 showAlert('Login successful! Redirecting...', 'success');
 
-                // Redirect based on user role
                 setTimeout(() => {
-                    if (response.user.isAdmin) {
-                        window.location.href = '/admin.html';
-                    } else {
-                        window.location.href = '/dashboard.html';
-                    }
+                    window.location.href = response.user.isAdmin
+                        ? '/admin.html'
+                        : '/dashboard.html';
                 }, 1000);
+
             } else {
-                showAlert(response.message || 'Login failed', 'error');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
+                // ✅ Failed login — track attempts client-side too
+                const attempts = incrementLoginAttempts();
+                const attemptsLeft = MAX_LOGIN_ATTEMPTS - attempts;
+
+                if (attempts >= MAX_LOGIN_ATTEMPTS) {
+                    setLockout();
+                    showAlert('Too many failed attempts. Account locked for 15 minutes.', 'error');
+                    showLockoutUI(15);
+                } else {
+                    // Show server message which includes attempts remaining
+                    showAlert(response.message || 'Login failed', 'error');
+                    if (attemptsLeft <= MAX_LOGIN_ATTEMPTS - 1) {
+                        updateAttemptsUI(attemptsLeft);
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
             }
         } catch (error) {
             showAlert(error.message || 'Connection error. Please try again.', 'error');
@@ -95,30 +276,22 @@ function setupRegisterForm(form) {
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Get form values
-        const fullName = document.getElementById('fullname').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const password = document.getElementById('password').value;
+        const fullName        = document.getElementById('fullname').value.trim();
+        const email           = document.getElementById('email').value.trim();
+        const phone           = document.getElementById('phone').value.trim();
+        const password        = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
 
-        // Validate
         if (!fullName || !email || !password) {
-            showAlert('Please fill in all required fields', 'error');
-            return;
+            showAlert('Please fill in all required fields', 'error'); return;
         }
-
         if (password !== confirmPassword) {
-            showAlert('Passwords do not match', 'error');
-            return;
+            showAlert('Passwords do not match', 'error'); return;
         }
-
         if (password.length < 6) {
-            showAlert('Password must be at least 6 characters', 'error');
-            return;
+            showAlert('Password must be at least 6 characters', 'error'); return;
         }
 
-        // Show loading
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
         submitBtn.disabled = true;
@@ -128,15 +301,9 @@ function setupRegisterForm(form) {
             const response = await api.register({ fullName, email, phone, password });
 
             if (response.success) {
-                // Save auth data
                 setAuthData(response.token, response.user);
-
                 showAlert('Registration successful! Welcome to Wize Invoice!', 'success');
-
-                // Redirect to dashboard
-                setTimeout(() => {
-                    window.location.href = '/dashboard.html';
-                }, 1500);
+                setTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
             } else {
                 showAlert(response.message || 'Registration failed', 'error');
                 submitBtn.disabled = false;
@@ -156,11 +323,7 @@ function setupForgotForm(form) {
         e.preventDefault();
 
         const email = document.getElementById('email').value.trim();
-
-        if (!email) {
-            showAlert('Please enter your email address', 'error');
-            return;
-        }
+        if (!email) { showAlert('Please enter your email address', 'error'); return; }
 
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
@@ -169,7 +332,6 @@ function setupForgotForm(form) {
 
         try {
             const response = await api.forgotPassword(email);
-
             if (response.success) {
                 showAlert('If your email is registered, you will receive a password reset link.', 'success');
                 form.reset();
@@ -187,29 +349,22 @@ function setupForgotForm(form) {
 
 // Setup Reset Password Form
 function setupResetForm(form) {
-    // Get token from URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
-    if (!token) {
-        showAlert('Invalid or missing reset token', 'error');
-        return;
-    }
+    if (!token) { showAlert('Invalid or missing reset token', 'error'); return; }
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const newPassword = document.getElementById('new-password').value;
+        const newPassword     = document.getElementById('new-password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
 
         if (newPassword.length < 6) {
-            showAlert('Password must be at least 6 characters', 'error');
-            return;
+            showAlert('Password must be at least 6 characters', 'error'); return;
         }
-
         if (newPassword !== confirmPassword) {
-            showAlert('Passwords do not match', 'error');
-            return;
+            showAlert('Passwords do not match', 'error'); return;
         }
 
         const submitBtn = form.querySelector('button[type="submit"]');
@@ -219,17 +374,14 @@ function setupResetForm(form) {
 
         try {
             const response = await api.resetPassword({
-                token: token,
-                newPassword: newPassword,
-                confirmPassword: confirmPassword
+                token, newPassword, confirmPassword
             });
 
             if (response.success) {
+                // ✅ Clear any lockout on successful reset
+                resetLoginAttempts();
                 showAlert('Password reset successful! Redirecting to login...', 'success');
-
-                setTimeout(() => {
-                    window.location.href = '/login.html';
-                }, 2000);
+                setTimeout(() => { window.location.href = '/login.html'; }, 2000);
             } else {
                 showAlert(response.message || 'Failed to reset password', 'error');
                 submitBtn.disabled = false;
@@ -246,16 +398,9 @@ function setupResetForm(form) {
 // Handle Logout
 async function handleLogout(e) {
     e.preventDefault();
-
-    // Clear local storage
     clearAuthData();
-
     showAlert('Logged out successfully', 'success');
-
-    // Redirect to home
-    setTimeout(() => {
-        window.location.href = '/index.html';
-    }, 500);
+    setTimeout(() => { window.location.href = '/index.html'; }, 500);
 }
 
 // Update UI based on auth state
@@ -263,61 +408,35 @@ function updateAuthUI() {
     const loggedIn = isLoggedIn();
     const user = getCurrentUser();
 
-    // Update login/logout buttons in navbar
     const authButtons = document.getElementById('auth-buttons');
-    const userMenu = document.getElementById('user-menu');
+    const userMenu    = document.getElementById('user-menu');
 
     if (authButtons && userMenu) {
         if (loggedIn && user) {
             authButtons.classList.add('hidden');
             userMenu.classList.remove('hidden');
-
-            // Update user name display
             const userNameSpan = document.getElementById('user-name');
-            if (userNameSpan) {
-                userNameSpan.textContent = user.fullName || user.email;
-            }
+            if (userNameSpan) userNameSpan.textContent = user.fullName || user.email;
         } else {
             authButtons.classList.remove('hidden');
             userMenu.classList.add('hidden');
         }
     }
 
-    // Update admin link visibility
     if (loggedIn && isAdmin()) {
-        const adminLink = document.getElementById('admin-link');
-        if (adminLink) {
-            adminLink.classList.remove('hidden');
-        }
+        document.getElementById('admin-link')?.classList.remove('hidden');
     }
 }
 
-// Change Password (for settings page)
+// Change Password (settings page)
 async function changePassword(currentPassword, newPassword, confirmPassword) {
-    if (newPassword !== confirmPassword) {
-        throw new Error('Passwords do not match');
-    }
+    if (newPassword !== confirmPassword) throw new Error('Passwords do not match');
+    if (newPassword.length < 6) throw new Error('Password must be at least 6 characters');
 
-    if (newPassword.length < 6) {
-        throw new Error('Password must be at least 6 characters');
-    }
-
-    const response = await api.changePassword({
-        currentPassword,
-        newPassword,
-        confirmPassword
-    });
-
-    if (!response.success) {
-        throw new Error(response.message || 'Failed to change password');
-    }
-
+    const response = await api.changePassword({ currentPassword, newPassword, confirmPassword });
+    if (!response.success) throw new Error(response.message || 'Failed to change password');
     return response;
 }
-
-// ========================================
-// NEW FUNCTIONS ADDED BELOW
-// ========================================
 
 // Toggle password visibility
 function togglePassword() {
@@ -325,16 +444,12 @@ function togglePassword() {
     if (passwordInput) {
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
-
-        // Toggle eye icon
         const toggleBtn = document.querySelector('.password-toggle');
-        if (toggleBtn) {
-            toggleBtn.textContent = type === 'password' ? '👁️' : '🙈';
-        }
+        if (toggleBtn) toggleBtn.textContent = type === 'password' ? '👁️' : '🙈';
     }
 }
 
-// Social login placeholder (to be implemented later)
+// Social login placeholder
 function socialLogin(provider) {
     showAlert(`${provider} login coming soon!`, 'info');
 }
