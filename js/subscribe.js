@@ -3,7 +3,7 @@
 // Country detection, dynamic pricing, Paystack flow
 // ========================================
 
-const BACKEND_URL = 'https://localhost:7010';
+const BACKEND_URL = 'https://wizeinvoice-001-site1.ntempurl.com';
 
 document.addEventListener('DOMContentLoaded', async function () {
     if (!requireAuth()) return;

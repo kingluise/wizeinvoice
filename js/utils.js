@@ -4,7 +4,7 @@
 // ========================================
 
 // API Configuration
-const API_BASE_URL = 'https://localhost:7010/api';
+const API_BASE_URL = 'https://wizeinvoice-001-site1.ntempurl.com/api';
 
 // Get stored auth token
 function getAuthToken() {

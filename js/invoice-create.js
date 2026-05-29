@@ -411,7 +411,7 @@ async function uploadLogoInvoice(file) {
     const formData = new FormData();
     formData.append('file', file);
     const token = getAuthToken();
-    const backendUrl = 'https://localhost:7010';
+    const backendUrl = 'https://wizeinvoice-001-site1.ntempurl.com/';
 
     try {
         showAlert('Uploading logo...', 'info');
